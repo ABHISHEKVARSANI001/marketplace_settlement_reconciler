@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Settlement Line List View -->
+    <record id="view_marketplace_settlement_line_list" model="ir.ui.view">
+        <field name="name">marketplace.settlement.line.list</field>
+        <field name="model">marketplace.settlement.line</field>
+        <field name="arch" type="xml">
+            <list string="Settlement Lines" create="false" edit="false">
+                <field name="settlement_id"/>
+                <field name="marketplace_order_id"/>
+                <field name="order_date"/>
+                <field name="partner_id"/>
+                <field name="sale_order_id"/>
+                <field name="invoice_id"/>
+                <field name="gross_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="commission_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="shipping_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="tax_deducted" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="net_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="status" widget="badge" 
+                       decoration-success="status == 'matched'" 
+                       decoration-warning="status == 'review_needed'" 
+                       decoration-danger="status == 'not_found'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Settlement Line Form View -->
+    <record id="view_marketplace_settlement_line_form" model="ir.ui.view">
+        <field name="name">marketplace.settlement.line.form</field>
+        <field name="model">marketplace.settlement.line</field>
+        <field name="arch" type="xml">
+            <form string="Settlement Transaction">
+                <header>
+                    <button name="action_match_with_system_records" 
+                            type="object" 
+                            string="Re-Match Line" 
+                            class="btn-secondary"/>
+                    <field name="status" widget="statusbar" statusbar_visible="not_found,review_needed,matched"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Order Identification">
+                            <field name="settlement_id" readonly="1"/>
+                            <field name="marketplace_order_id"/>
+                            <field name="order_date"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group string="Odoo Links">
+                            <field name="sale_order_id"/>
+                            <field name="invoice_id"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Financial Breakdown">
+                        <group>
+                            <field name="gross_amount" widget="monetary"/>
+                            <field name="commission_fee" widget="monetary"/>
+                            <field name="shipping_fee" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="tax_deducted" widget="monetary"/>
+                            <field name="net_amount" widget="monetary" class="oe_bold"/>
+                        </group>
+                    </group>
+                    <group string="Resolution &amp; Discrepancy" invisible="not notes">
+                        <field name="notes" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Settlement Line Search View -->
+    <record id="view_marketplace_settlement_line_search" model="ir.ui.view">
+        <field name="name">marketplace.settlement.line.search</field>
+        <field name="model">marketplace.settlement.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Settlement Lines">
+                <field name="marketplace_order_id"/>
+                <field name="partner_id"/>
+                <separator/>
+                <filter string="Matched" name="matched" domain="[('status', '=', 'matched')]"/>
+                <filter string="Not Found" name="not_found" domain="[('status', '=', 'not_found')]"/>
+                <filter string="Review Needed" name="review_needed" domain="[('status', '=', 'review_needed')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Window for Settlement Lines -->
+    <record id="action_marketplace_settlement_line" model="ir.actions.act_window">
+        <field name="name">Settlement Line Items</field>
+        <field name="res_model">marketplace.settlement.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_marketplace_settlement_line_search"/>
+    </record>
+</odoo>

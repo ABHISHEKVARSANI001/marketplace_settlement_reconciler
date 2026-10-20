@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Marketplace Reconciliation Top Menu under Invoicing/Accounting -->
+    <menuitem id="menu_marketplace_reconciler_root" 
+              name="Marketplace Settlements" 
+              parent="account.menu_finance" 
+              sequence="35"/>
+
+    <!-- Settlement Batches List -->
+    <menuitem id="menu_marketplace_settlement_journal" 
+              name="Settlement Reports" 
+              parent="menu_marketplace_reconciler_root" 
+              action="action_marketplace_settlement_journal" 
+              sequence="10"/>
+
+    <!-- Quick Import Action Menu -->
+    <menuitem id="menu_marketplace_settlement_import" 
+              name="Import Settlement CSV" 
+              parent="menu_marketplace_reconciler_root" 
+              action="action_marketplace_settlement_import_wizard" 
+              sequence="20"/>
+
+    <!-- Discrepancy & Line Items View -->
+    <menuitem id="menu_marketplace_settlement_lines" 
+              name="Settlement Lines" 
+              parent="menu_marketplace_reconciler_root" 
+              action="action_marketplace_settlement_line" 
+              sequence="30"/>
+</odoo>

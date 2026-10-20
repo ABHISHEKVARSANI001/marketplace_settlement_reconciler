@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Import Settlement Wizard Form View -->
+    <record id="view_marketplace_settlement_import_wizard_form" model="ir.ui.view">
+        <field name="name">marketplace.settlement.import.wizard.form</field>
+        <field name="model">marketplace.settlement.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Marketplace Settlement Report">
+                <sheet>
+                    <div class="text-muted mb-3">
+                        Upload your CSV settlement report exported directly from Amazon Seller Central, Flipkart Seller Hub, or Meesho Supplier Panel.
+                    </div>
+                    <group>
+                        <group string="File &amp; Source">
+                            <field name="marketplace" widget="radio"/>
+                            <field name="file_data" filename="file_name"/>
+                            <field name="file_name" invisible="1"/>
+                            <field name="marketplace_partner_id" placeholder="e.g. Amazon India Pte Ltd"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group string="Journal Configuration">
+                            <field name="journal_id"/>
+                            <field name="clearing_account_id" placeholder="Defaults to Journal Account"/>
+                            <field name="default_receivable_account_id"/>
+                        </group>
+                    </group>
+                    <group string="Expense &amp; Tax Allocation Accounts">
+                        <group>
+                            <field name="commission_account_id"/>
+                            <field name="shipping_account_id"/>
+                        </group>
+                        <group>
+                            <field name="tax_account_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_parse_and_import" 
+                            string="Import &amp; Process" 
+                            type="object" 
+                            class="btn-primary" 
+                            data-hotkey="q"/>
+                    <button string="Cancel" 
+                            class="btn-secondary" 
+                            special="cancel" 
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Window for the Import Wizard -->
+    <record id="action_marketplace_settlement_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Marketplace Report</field>
+        <field name="res_model">marketplace.settlement.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Settlement Journal List View -->
+    <record id="view_marketplace_settlement_journal_list" model="ir.ui.view">
+        <field name="name">marketplace.settlement.journal.list</field>
+        <field name="model">marketplace.settlement.journal</field>
+        <field name="arch" type="xml">
+            <list string="Marketplace Settlements">
+                <field name="name"/>
+                <field name="marketplace" widget="badge"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="account_journal_id"/>
+                <field name="line_count"/>
+                <field name="total_gross" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="total_commission" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="total_shipping" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="total_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="total_net" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('draft', 'parsed')"
+                       decoration-warning="state == 'matched'"
+                       decoration-success="state == 'posted'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Settlement Journal Form View -->
+    <record id="view_marketplace_settlement_journal_form" model="ir.ui.view">
+        <field name="name">marketplace.settlement.journal.form</field>
+        <field name="model">marketplace.settlement.journal</field>
+        <field name="arch" type="xml">
+            <form string="Marketplace Settlement">
+                <header>
+                    <button name="action_match_lines" 
+                            type="object" 
+                            string="Match Invoices" 
+                            class="btn-secondary" 
+                            invisible="state in ('draft', 'posted')"/>
+                    <button name="action_generate_journal_entry" 
+                            type="object" 
+                            string="Generate Journal Entry" 
+                            class="btn-primary" 
+                            invisible="state != 'matched'"/>
+                    <button name="action_reset_to_draft" 
+                            type="object" 
+                            string="Reset to Draft" 
+                            invisible="state in ('draft', 'posted')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,parsed,matched,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_journal_entry" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-book" 
+                                invisible="not account_move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Journal Entry</span>
+                                <span class="o_stat_value">Posted</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Amazon Settlement Apr 2025" readonly="state == 'posted'"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Batch Overview">
+                            <field name="marketplace" readonly="state == 'posted'"/>
+                            <field name="marketplace_partner_id" readonly="state == 'posted'"/>
+                            <label for="date_start" string="Settlement Period"/>
+                            <div class="o_row">
+                                <field name="date_start" readonly="state == 'posted'"/>
+                                <span class="oe_grey"> to </span>
+                                <field name="date_end" readonly="state == 'posted'"/>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state == 'posted'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Target Accounting">
+                            <field name="account_journal_id" readonly="state == 'posted'"/>
+                            <field name="clearing_account_id" readonly="state == 'posted'"/>
+                            <field name="default_receivable_account_id" readonly="state == 'posted'"/>
+                            <field name="account_move_id" invisible="not account_move_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Settlement Lines" name="lines">
+                            <field name="line_ids" readonly="state == 'posted'">
+                                <list decoration-success="status == 'matched'" 
+                                      decoration-warning="status == 'review_needed'" 
+                                      decoration-danger="status == 'not_found'" 
+                                      editable="bottom">
+                                    <field name="marketplace_order_id"/>
+                                    <field name="order_date"/>
+                                    <field name="partner_id"/>
+                                    <field name="sale_order_id"/>
+                                    <field name="invoice_id"/>
+                                    <field name="gross_amount" sum="Total Gross"/>
+                                    <field name="commission_fee" sum="Total Commission"/>
+                                    <field name="shipping_fee" sum="Total Shipping"/>
+                                    <field name="tax_deducted" sum="Total Tax"/>
+                                    <field name="net_amount" sum="Total Net"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="status" widget="badge" 
+                                           decoration-success="status == 'matched'" 
+                                           decoration-warning="status == 'review_needed'" 
+                                           decoration-danger="status == 'not_found'"/>
+                                    <field name="notes" optional="show"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_gross" widget="monetary"/>
+                                <field name="total_commission" widget="monetary"/>
+                                <field name="total_shipping" widget="monetary"/>
+                                <field name="total_tax" widget="monetary"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="total_net"/>
+                                </div>
+                                <field name="total_net" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <page string="Expense &amp; Tax Ledgers" name="accounts">
+                            <group>
+                                <group>
+                                    <field name="commission_account_id" readonly="state == 'posted'"/>
+                                    <field name="shipping_account_id" readonly="state == 'posted'"/>
+                                </group>
+                                <group>
+                                    <field name="tax_account_id" readonly="state == 'posted'"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Settlement Journal Search View -->
+<!-- Settlement Journal Search View -->
+    <record id="view_marketplace_settlement_journal_search" model="ir.ui.view">
+        <field name="name">marketplace.settlement.journal.search</field>
+        <field name="model">marketplace.settlement.journal</field>
+        <field name="arch" type="xml">
+            <search string="Search Settlements">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Window for Settlement Journals -->
+    <record id="action_marketplace_settlement_journal" model="ir.actions.act_window">
+        <field name="name">Marketplace Settlements</field>
+        <field name="res_model">marketplace.settlement.journal</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_marketplace_settlement_journal_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Import and reconcile your first marketplace settlement statement.
+            </p>
+            <p>
+                Upload settlement CSV files from Amazon, Flipkart, or Meesho to balance gross receivables, commissions, shipping deductions, and bank payouts automatically.
+            </p>
+        </field>
+    </record>
+</odoo>
