@@ -3,7 +3,7 @@
     'name': 'Marketplace Settlement Reconciler',
     'version': '19.0.1.0.2',
     'category': 'Accounting/Localizations',
-    'summary': 'Parse and reconcile marketplace settlement reports (Amazon, Flipkart, Meesho)',
+    'summary': 'Automate marketplace settlement reconciliation, payout reports, and invoice matching for Amazon, Flipkart, Meesho, e-commerce accounting, financial journals, and payment gateway settlement.',
     'description': """
 Marketplace Settlement Reconciler
 ==================================
