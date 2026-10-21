@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Marketplace Settlement Reconciler',
-    'version': '19.0.1.0.1',
+    'version': '19.0.1.0.2',
     'category': 'Accounting/Localizations',
     'summary': 'Parse and reconcile marketplace settlement reports (Amazon, Flipkart, Meesho)',
     'description': """
@@ -27,6 +27,7 @@ Automates the reconciliation of e-commerce marketplace settlement summaries:
         'views/marketplace_settlement_import_wizard_view.xml',
         'views/marketplace_settlement_menus.xml',
     ],
+    'images': ['static/description/banner.png'],
     'installable': True,
     'application': True,
     'auto_install': False,
