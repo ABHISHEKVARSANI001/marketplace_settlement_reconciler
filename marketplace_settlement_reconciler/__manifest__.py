@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Marketplace Settlement Reconciler',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Accounting/Localizations',
     'summary': 'Parse and reconcile marketplace settlement reports (Amazon, Flipkart, Meesho)',
     'description': """
