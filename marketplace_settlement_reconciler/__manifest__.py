@@ -15,6 +15,8 @@ Automates the reconciliation of e-commerce marketplace settlement summaries:
     """,
     'author': 'abhishek varsani',
     'website': 'https://github.com/ABHISHEKVARSANI001',
+    'maintainer': 'abhishek varsani',
+    'support': 'abhishek.kurji@gmail.com',
     'license': 'OPL-1',
     'depends': [
         'account',
